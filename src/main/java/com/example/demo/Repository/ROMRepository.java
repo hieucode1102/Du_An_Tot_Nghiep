@@ -25,6 +25,7 @@ public interface ROMRepository extends JpaRepository<ROM, Integer> {
 
     public List<ROM> findByTrangThai(int trangThai);
 
+    public ROM findByTenRomIsLike(String ten);
     @Modifying
     @Query(value = "UPDATE ROM SET trangThai = :trangThai WHERE id = :id")
     void changeStatus(@Param("trangThai") int trangThai, @Param("id") int id);

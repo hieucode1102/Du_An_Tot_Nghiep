@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -28,7 +25,6 @@ public class ChipController {
         int page = pageParam.orElse(0);
         Pageable pageable = PageRequest.of(page, 5);
         Page<Chip> data = chipRepository.findAll(pageable);
-        model.addAttribute("main", "index");
         model.addAttribute("data", data);
         return "Chip/index";
     }
@@ -36,11 +32,12 @@ public class ChipController {
     @PostMapping("/store")
     public String store(@RequestParam("ten") String ten)
     {
-        Chip chip = new Chip();
-        chip.setTen(ten);
-        chip.setTrangThai(1);
-        chipRepository.save(chip);
-
+        if (ten.trim().length() > 0 && chipRepository.findByTenIsLike(ten.trim()) != null) {
+            Chip chip = new Chip();
+            chip.setTen(ten.trim());
+            chip.setTrangThai(1);
+            chipRepository.save(chip);
+        }
         return "redirect:/chip/index";
     }
 
@@ -81,22 +78,24 @@ public class ChipController {
         return "Chip/index";
     }
 
-    @GetMapping("edit")
-    public String edit(Model model, @RequestParam("id") int id)
+    @GetMapping("edit/{id}")
+    public String edit(Model model, @PathVariable("id") int id)
     {
         Optional<Chip> chip = chipRepository.findById(id);
         model.addAttribute("chip", chip.get());
         return "Chip/update";
     }
 
-    @PostMapping("update")
-    public String update(@RequestParam("id") int id, @RequestParam("ten") String ten, @RequestParam("trangThai") int trangThai)
+    @PostMapping("update/{id}")
+    public String update(@PathVariable("id") int id, @RequestParam("ten") String ten)
     {
-        Optional<Chip> req = chipRepository.findById(id);
-        Chip chip = req.get();
-        chip.setTrangThai(trangThai);
-        chip.setTen(ten);
-        chipRepository.save(chip);
+        if (ten.trim().length() > 0) {
+            Optional<Chip> req = chipRepository.findById(id);
+            Chip chip = req.get();
+            chip.setTen(ten.trim());
+            chipRepository.save(chip);
+        }
+
         return "redirect:/chip/index";
     }
 }

@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -36,10 +33,12 @@ public class HeDieuHanhController {
     @PostMapping("/store")
     public String store(@RequestParam("ten") String ten)
     {
-        HeDieuHanh heDieuHanh = new HeDieuHanh();
-        heDieuHanh.setTen(ten);
-        heDieuHanh.setTrangThai(1);
-        heDieuHanhRepository.save(heDieuHanh);
+        if (ten.trim().length() > 0 && heDieuHanhRepository.findByTenIsLike(ten.trim()) == null) {
+            HeDieuHanh heDieuHanh = new HeDieuHanh();
+            heDieuHanh.setTen(ten.trim());
+            heDieuHanh.setTrangThai(1);
+            heDieuHanhRepository.save(heDieuHanh);
+        }
 
         return "redirect:/heDieuHanh/index";
     }
@@ -81,22 +80,24 @@ public class HeDieuHanhController {
         return "HeDieuHanh/index";
     }
 
-    @GetMapping("edit")
-    public String edit(Model model, @RequestParam("id") int id)
+    @GetMapping("edit/{id}")
+    public String edit(Model model, @PathVariable("id") int id)
     {
         Optional<HeDieuHanh> heDieuHanh = heDieuHanhRepository.findById(id);
         model.addAttribute("heDieuHanh", heDieuHanh.get());
         return "HeDieuHanh/update";
     }
 
-    @PostMapping("update")
-    public String update(@RequestParam("id") int id, @RequestParam("ten") String ten, @RequestParam("trangThai") int trangThai)
+    @PostMapping("update/{id}")
+    public String update(@PathVariable("id") int id, @RequestParam("ten") String ten)
     {
-        Optional<HeDieuHanh> req = heDieuHanhRepository.findById(id);
-        HeDieuHanh heDieuHanh = req.get();
-        heDieuHanh.setTrangThai(trangThai);
-        heDieuHanh.setTen(ten);
-        heDieuHanhRepository.save(heDieuHanh);
+        if (ten.trim().length() > 0) {
+            Optional<HeDieuHanh> req = heDieuHanhRepository.findById(id);
+            HeDieuHanh heDieuHanh = req.get();
+            heDieuHanh.setTen(ten.trim());
+            heDieuHanhRepository.save(heDieuHanh);
+        }
+
         return "redirect:/heDieuHanh/index";
     }
 }

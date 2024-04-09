@@ -25,6 +25,8 @@ public interface SimRepository extends JpaRepository<Sim, Integer> {
 
     public List<Sim> findByTrangThai(int trangThai);
 
+    public Sim findByTenIsLike(String ten);
+
     @Modifying
     @Query(value = "UPDATE Sim SET trangThai = :trangThai WHERE id = :id")
     void changeStatus(@Param("trangThai") int trangThai, @Param("id") int id);

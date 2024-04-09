@@ -25,6 +25,8 @@ public interface HeDieuHanhRepository extends JpaRepository<HeDieuHanh, Integer>
 
     public List<HeDieuHanh> findByTrangThai(int trangThai);
 
+    public HeDieuHanh findByTenIsLike(String ten);
+
     @Modifying
     @Query(value = "UPDATE HeDieuHanh SET trangThai = :trangThai WHERE id = :id")
     void changeStatus(@Param("trangThai") int trangThai, @Param("id") int id);

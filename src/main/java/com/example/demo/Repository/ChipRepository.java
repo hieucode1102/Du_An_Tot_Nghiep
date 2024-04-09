@@ -25,6 +25,8 @@ public interface ChipRepository extends JpaRepository<Chip, Integer> {
 
     public List<Chip> findByTrangThai(int trangThai);
 
+    public Chip findByTenIsLike(String ten);
+
     @Modifying
     @Query(value = "UPDATE Chip SET trangThai = :trangThai WHERE id = :id")
     void changeStatus(@Param("trangThai") int trangThai, @Param("id") int id);

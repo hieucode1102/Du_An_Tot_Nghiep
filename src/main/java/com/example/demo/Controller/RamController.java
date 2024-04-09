@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -36,10 +33,12 @@ public class RamController {
     @PostMapping("/store")
     public String store(@RequestParam("ten") String ten)
     {
-        RAM ram = new RAM();
-        ram.setTen(ten);
-        ram.setTrangThai(1);
-        ramRepository.save(ram);
+        if (ten.trim().length() > 0 && ramRepository.findByTenIsLike(ten.trim()) == null) {
+            RAM ram = new RAM();
+            ram.setTen(ten.trim());
+            ram.setTrangThai(1);
+            ramRepository.save(ram);
+        }
 
         return "redirect:/ram/index";
     }
@@ -81,22 +80,23 @@ public class RamController {
         return "RAM/index";
     }
 
-    @GetMapping("edit")
-    public String edit(Model model, @RequestParam("id") int id)
+    @GetMapping("edit/{id}")
+    public String edit(Model model, @PathVariable("id") int id)
     {
         Optional<RAM> ram = ramRepository.findById(id);
         model.addAttribute("ram", ram.get());
         return "RAM/update";
     }
 
-    @PostMapping("update")
-    public String update(@RequestParam("id") int id, @RequestParam("ten") String ten, @RequestParam("trangThai") int trangThai)
+    @PostMapping("update/{id}")
+    public String update(@PathVariable("id") int id, @RequestParam("ten") String ten)
     {
-        Optional<RAM> req = ramRepository.findById(id);
-        RAM ram = req.get();
-        ram.setTrangThai(trangThai);
-        ram.setTen(ten);
-        ramRepository.save(ram);
+        if (ten.trim().length() > 0) {
+            Optional<RAM> req = ramRepository.findById(id);
+            RAM ram = req.get();
+            ram.setTen(ten.trim());
+            ramRepository.save(ram);
+        }
         return "redirect:/ram/index";
     }
 }

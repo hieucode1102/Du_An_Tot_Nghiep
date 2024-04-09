@@ -25,6 +25,8 @@ public interface RAMRepository extends JpaRepository<RAM, Integer> {
 
     public List<RAM> findByTrangThai(int trangThai);
 
+    public RAM findByTenIsLike(String ten);
+
     @Modifying
     @Query(value = "UPDATE RAM SET trangThai = :trangThai WHERE id = :id")
     void changeStatus(@Param("trangThai") int trangThai, @Param("id") int id);

@@ -451,12 +451,12 @@
         <div class="layout-page">
 
             <div class="card" style="margin: 50px">
-                <h5 class="card-header bg-light text-center">Danh sách Camera Sau</h5>
+                <h5 class="card-header bg-light text-center">Chỉnh sửa Camera Trước</h5>
                 <div class="card-body">
-                    <form th:action="@{'/cameraSau/update/' + ${cameraSau.id}}" method="POST">
+                    <form th:action="@{'/cameraTruoc/update/' + ${cameraTruoc.id}}" method="POST">
                         <div class="mb-3">
                             <label class="form-label">Tên Camera Sau:</label>
-                            <input type="text" th:name="ten" th:value="${cameraSau.ten}" class="form-control">
+                            <input type="text" th:name="ten" th:value="${cameraTruoc.ten}" class="form-control">
                         </div>
                         <button type="submit" class="btn btn-primary" style="margin-left: 450px">Sửa</button>
                     </form>

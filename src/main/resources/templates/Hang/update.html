@@ -451,14 +451,14 @@
         <div class="layout-page">
 
             <div class="card" style="margin: 50px">
-                <h5 class="card-header bg-light text-center">Danh sách Hãng</h5>
+                <h5 class="card-header bg-light text-center">Chỉnh sửa Hãng</h5>
                 <div class="card-body">
                     <form th:action="@{'/hang/update/' + ${hang.id}}" method="POST">
                         <div class="mb-3">
                             <label class="form-label">Tên hãng:</label>
                             <input type="text" th:name="ten" th:value="${hang.ten}" class="form-control">
                         </div>
-                        <button type="submit" class="btn btn-primary">Sửa</button>
+                        <button type="submit" class="btn btn-primary" style="margin-left: 450px">Sửa</button>
                     </form>
                 </div>
             </div>

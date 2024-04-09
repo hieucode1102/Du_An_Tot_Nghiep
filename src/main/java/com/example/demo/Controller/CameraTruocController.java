@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -28,7 +25,6 @@ public class CameraTruocController {
         int page = pageParam.orElse(0);
         Pageable pageable = PageRequest.of(page, 5);
         Page<CameraTruoc> data = cameraTruocRepository.findAll(pageable);
-        model.addAttribute("main", "index");
         model.addAttribute("data", data);
         return "CameraTruoc/index";
     }
@@ -36,11 +32,12 @@ public class CameraTruocController {
     @PostMapping("/store")
     public String store(@RequestParam("ten") String ten)
     {
-        CameraTruoc cameraTruoc = new CameraTruoc();
-        cameraTruoc.setTen(ten);
-        cameraTruoc.setTrangThai(1);
-        cameraTruocRepository.save(cameraTruoc);
-
+        if (ten.trim().length() != 0 && cameraTruocRepository.findByTenIsLike(ten.trim()) == null) {
+            CameraTruoc cameraTruoc = new CameraTruoc();
+            cameraTruoc.setTen(ten.trim());
+            cameraTruoc.setTrangThai(1);
+            cameraTruocRepository.save(cameraTruoc);
+        }
         return "redirect:/cameraTruoc/index";
     }
 
@@ -81,22 +78,24 @@ public class CameraTruocController {
         return "CameraTruoc/index";
     }
 
-    @GetMapping("edit")
-    public String edit(Model model, @RequestParam("id") int id)
+    @GetMapping("edit/{id}")
+    public String edit(Model model, @PathVariable("id") int id)
     {
         Optional<CameraTruoc> cameraTruoc = cameraTruocRepository.findById(id);
-        model.addAttribute("camTruoc", cameraTruoc.get());
+        model.addAttribute("cameraTruoc", cameraTruoc.get());
         return "CameraTruoc/update";
     }
 
-    @PostMapping("update")
-    public String update(@RequestParam("id") int id, @RequestParam("ten") String ten, @RequestParam("trangThai") int trangThai)
+    @PostMapping("update/{id}")
+    public String update(@PathVariable("id") int id, @RequestParam("ten") String ten)
     {
-        Optional<CameraTruoc> req = cameraTruocRepository.findById(id);
-        CameraTruoc cameraTruoc = req.get();
-        cameraTruoc.setTrangThai(trangThai);
-        cameraTruoc.setTen(ten);
-        cameraTruocRepository.save(cameraTruoc);
+        if (ten.trim().length() > 0) {
+            Optional<CameraTruoc> req = cameraTruocRepository.findById(id);
+            CameraTruoc cameraTruoc = req.get();
+            cameraTruoc.setTen(ten.trim());
+            cameraTruocRepository.save(cameraTruoc);
+        }
+
         return "redirect:/cameraTruoc/index";
     }
 }

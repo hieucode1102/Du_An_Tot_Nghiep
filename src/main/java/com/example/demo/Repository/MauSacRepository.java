@@ -25,6 +25,10 @@ public interface MauSacRepository extends JpaRepository<MauSac, Integer> {
 
     public List<MauSac> findByTrangThai(int trangThai);
 
+    public MauSac findByTenMauSacIsLike(String ten);
+
+    public MauSac findByMaMauSacIsLike(String ma);
+
     @Modifying
     @Query(value = "UPDATE MauSac SET trangThai = :trangThai WHERE id = :id")
     void changeStatus(@Param("trangThai") int trangThai, @Param("id") int id);

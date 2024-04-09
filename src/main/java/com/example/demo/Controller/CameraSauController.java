@@ -34,7 +34,7 @@ public class CameraSauController {
     {
         if (ten.trim().length() != 0 && (cameraSauRepository.findByTenIsLike(ten.trim()) == null)) {
             CameraSau cameraSau = new CameraSau();
-            cameraSau.setTen(ten);
+            cameraSau.setTen(ten.trim());
             cameraSau.setTrangThai(1);
             cameraSauRepository.save(cameraSau);
         }
@@ -92,7 +92,7 @@ public class CameraSauController {
         if (ten.trim().length() != 0) {
             Optional<CameraSau> req = cameraSauRepository.findById(id);
             CameraSau cameraSau = req.get();
-            cameraSau.setTen(ten);
+            cameraSau.setTen(ten.trim());
             cameraSauRepository.save(cameraSau);
         }
 

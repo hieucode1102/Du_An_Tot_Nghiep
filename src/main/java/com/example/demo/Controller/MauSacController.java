@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -36,11 +33,13 @@ public class MauSacController {
     @PostMapping("/store")
     public String store(@RequestParam("ten") String ten, @RequestParam("ma") String ma)
     {
-        MauSac mauSac = new MauSac();
-        mauSac.setTenMauSac(ten);
-        mauSac.setMaMauSac(ma);
-        mauSac.setTrangThai(1);
-        mauSacRepository.save(mauSac);
+        if (ten.trim().length() > 0 && ma.trim().length() > 0 && mauSacRepository.findByTenMauSacIsLike(ten.trim()) == null && mauSacRepository.findByMaMauSacIsLike(ma.trim()) == null) {
+            MauSac mauSac = new MauSac();
+            mauSac.setTenMauSac(ten);
+            mauSac.setMaMauSac(ma);
+            mauSac.setTrangThai(1);
+            mauSacRepository.save(mauSac);
+        }
 
         return "redirect:/mauSac/index";
     }
@@ -82,24 +81,26 @@ public class MauSacController {
         return "MauSac/index";
     }
 
-    @GetMapping("edit")
-    public String edit(Model model, @RequestParam("id") int id)
+    @GetMapping("edit/{id}")
+    public String edit(Model model, @PathVariable("id") int id)
     {
         Optional<MauSac> mauSac = mauSacRepository.findById(id);
         model.addAttribute("mauSac", mauSac.get());
         return "MauSac/update";
     }
 
-    @PostMapping("update")
-    public String update(@RequestParam("id") int id, @RequestParam("ten") String ten
-            , @RequestParam("trangThai") int trangThai, @RequestParam("ma") String ma)
+    @PostMapping("update/{id}")
+    public String update(@PathVariable("id") int id, @RequestParam("ten") String ten
+            , @RequestParam("ma") String ma)
     {
-        Optional<MauSac> req = mauSacRepository.findById(id);
-        MauSac mauSac = req.get();
-        mauSac.setTrangThai(trangThai);
-        mauSac.setTenMauSac(ten);
-        mauSac.setMaMauSac(ma);
-        mauSacRepository.save(mauSac);
+        if (ten.trim().length() > 0 && ma.trim().length() > 0) {
+            Optional<MauSac> req = mauSacRepository.findById(id);
+            MauSac mauSac = req.get();
+            mauSac.setTenMauSac(ten.trim());
+            mauSac.setMaMauSac(ma.trim());
+            mauSacRepository.save(mauSac);
+
+        }
         return "redirect:/mauSac/index";
     }
 }

@@ -25,6 +25,8 @@ public interface PinRepository extends JpaRepository<Pin, Integer> {
 
     public List<Pin> findByTrangThai(int trangThai);
 
+    public Pin findByTenIsLike(String ten);
+
     @Modifying
     @Query(value = "UPDATE Pin SET trangThai = :trangThai WHERE id = :id")
     void changeStatus(@Param("trangThai") int trangThai, @Param("id") int id);

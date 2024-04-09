@@ -451,29 +451,103 @@
         <div class="layout-page">
 
             <div class="card" style="margin: 50px">
-                <h5 class="card-header bg-light text-center">Danh sách Camera Sau</h5>
-                <div class="card-body">
-                    <form th:action="@{'/cameraSau/update/' + ${cameraSau.id}}" method="POST">
-                        <div class="mb-3">
-                            <label class="form-label">Tên Camera Sau:</label>
-                            <input type="text" th:name="ten" th:value="${cameraSau.ten}" class="form-control">
+                <form th:action="@{/manHinh/search}">
+                    <div class="input-group ms-3 mt-3 mb-3 position-absolute top-0 start-0" style="width: 450px">
+                        <input type="text" class="form-control" placeholder="Nhập tên hãng" th:name="ten">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+                <form th:action="@{/manHinh/store}" method="POST">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-outline-primary me-3 mt-3 mb-3 position-absolute top-0 end-0"
+                            style="width: 150px;" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                        + Thêm Màn Hình
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Thêm Màn Hình</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <input class="form-control" type="text" name="ten">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Thêm</button>
+                                </div>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="margin-left: 450px">Sửa</button>
-                    </form>
+                    </div>
+                </form>
+                <div class="card-body" style="height: auto">
+                    <table class="table table-hover mt-2">
+                        <thead>
+                        <th>STT</th>
+                        <th>Tên Màn Hình</th>
+                        <th>Thao tác</th>
+                        </thead>
+                        <tbody>
+                        <tr th:each="manHinh, index : ${data.content}">
+                            <td th:text="${index.index + 1}"></td>
+                            <td th:text="${manHinh.ten}"></td>
+                            <td>
+                                <a th:href="@{'/manHinh/edit/' + ${manHinh.id}}" class="bx bx-edit ms-3">
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
+                <nav aria-label="Page navigation example" class="my-2" style="margin-left: 450px">
+                    <ul class="pagination">
+                        <li class="page-item" th:if="${data.number > 0}">
+                            <a class="page-link" th:href="@{/manHinh/index(page = data.number - 1)}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${data.number == 0}">
+                            <a class="page-link" th:href="@{/manHinh/index(page = 0)}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/manHinh/index(page = ${data.number})}" aria-label="Previous">
+                                <span aria-hidden="true" th:text="${data.number}"></span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/manHinh/index(page = ${data.number} + 1)}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
 
         </div>
-        <!-- / Layout page -->
     </div>
-
-    <!-- Overlay -->
-    <div class="layout-overlay layout-menu-toggle">
-
-    </div>
+    <!-- / Layout page -->
 </div>
 
-th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
+<!-- Overlay -->
+<div class="layout-overlay layout-menu-toggle">
+
+</div>
+</div>
+
+<script th:src="@{/assets/vendor/libs/jquery/jquery.js}"></script>
 <script type="text/javascript" th:src="@{/assets/vendor/libs/popper/popper.js}"></script>
 <script type="text/javascript" th:src="@{/assets/vendor/js/bootstrap.js}"></script>
 <script type="text/javascript" th:src="@{/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js}"></script>

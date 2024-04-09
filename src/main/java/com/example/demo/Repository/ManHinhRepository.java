@@ -25,6 +25,8 @@ public interface ManHinhRepository extends JpaRepository<ManHinh, Integer> {
 
     public List<ManHinh> findByTrangThai(int trangThai);
 
+    public ManHinh findByTenIsLike(String ten);
+
     @Modifying
     @Query(value = "UPDATE ManHinh SET trangThai = :trangThai WHERE id = :id")
     void changeStatus(@Param("trangThai") int trangThai, @Param("id") int id);

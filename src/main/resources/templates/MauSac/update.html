@@ -451,12 +451,16 @@
         <div class="layout-page">
 
             <div class="card" style="margin: 50px">
-                <h5 class="card-header bg-light text-center">Danh sách Camera Sau</h5>
+                <h5 class="card-header bg-light text-center">Chỉnh sửa Màu Sắc</h5>
                 <div class="card-body">
-                    <form th:action="@{'/cameraSau/update/' + ${cameraSau.id}}" method="POST">
+                    <form th:action="@{'/mauSac/update/' + ${mauSac.id}}" method="POST">
                         <div class="mb-3">
-                            <label class="form-label">Tên Camera Sau:</label>
-                            <input type="text" th:name="ten" th:value="${cameraSau.ten}" class="form-control">
+                            <label class="form-label">Tên màu sắc:</label>
+                            <input type="text" th:name="ten" th:value="${mauSac.tenMauSac}" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mã màu sắc:</label>
+                            <input type="text" th:name="ma" th:value="${mauSac.maMauSac}" class="form-control">
                         </div>
                         <button type="submit" class="btn btn-primary" style="margin-left: 450px">Sửa</button>
                     </form>

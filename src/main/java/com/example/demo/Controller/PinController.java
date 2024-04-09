@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -36,10 +33,12 @@ public class PinController {
     @PostMapping("/store")
     public String store(@RequestParam("ten") String ten)
     {
-        Pin pin = new Pin();
-        pin.setTen(ten);
-        pin.setTrangThai(1);
-        pinRepository.save(pin);
+        if (ten.trim().length() > 0 && pinRepository.findByTenIsLike(ten.trim()) == null) {
+            Pin pin = new Pin();
+            pin.setTen(ten.trim());
+            pin.setTrangThai(1);
+            pinRepository.save(pin);
+        }
 
         return "redirect:/pin/index";
     }
@@ -81,22 +80,23 @@ public class PinController {
         return "Pin/index";
     }
 
-    @GetMapping("edit")
-    public String edit(Model model, @RequestParam("id") int id)
+    @GetMapping("edit/{id}")
+    public String edit(Model model, @PathVariable("id") int id)
     {
         Optional<Pin> pin = pinRepository.findById(id);
         model.addAttribute("pin", pin.get());
         return "Pin/update";
     }
 
-    @PostMapping("update")
-    public String update(@RequestParam("id") int id, @RequestParam("ten") String ten, @RequestParam("trangThai") int trangThai)
+    @PostMapping("update/{id}")
+    public String update(@PathVariable("id") int id, @RequestParam("ten") String ten)
     {
-        Optional<Pin> req = pinRepository.findById(id);
-        Pin pin = req.get();
-        pin.setTrangThai(trangThai);
-        pin.setTen(ten);
-        pinRepository.save(pin);
+        if (ten.trim().length() > 0) {
+            Optional<Pin> req = pinRepository.findById(id);
+            Pin pin = req.get();
+            pin.setTen(ten.trim());
+            pinRepository.save(pin);
+        }
         return "redirect:/pin/index";
     }
 }

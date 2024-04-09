@@ -34,7 +34,7 @@ public class HangController {
     {
         if (ten.trim().length() != 0 && (hangRepository.findByTenIsLike(ten.trim()) == null)) {
             Hang hang = new Hang();
-            hang.setTen(ten);
+            hang.setTen(ten.trim());
             hang.setTrangThai(1);
             hangRepository.save(hang);
         }
@@ -93,7 +93,7 @@ public class HangController {
         if (ten.trim().length() != 0) {
             Optional<Hang> req = hangRepository.findById(id);
             Hang hang = req.get();
-            hang.setTen(ten);
+            hang.setTen(ten.trim());
             hangRepository.save(hang);
         }
 

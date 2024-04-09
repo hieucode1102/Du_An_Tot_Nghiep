@@ -25,6 +25,8 @@ public interface CameraTruocRepository extends JpaRepository<CameraTruoc, Intege
 
     public List<CameraTruoc> findByTrangThai(int trangThai);
 
+    public CameraTruoc findByTenIsLike(String ten);
+
     @Modifying
     @Query(value = "UPDATE CameraTruoc SET trangThai = :trangThai WHERE id = :id")
     void changeStatus(@Param("trangThai") int trangThai, @Param("id") int id);

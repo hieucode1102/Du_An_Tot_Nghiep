@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -36,10 +33,13 @@ public class ManHinhController {
     @PostMapping("/store")
     public String store(@RequestParam("ten") String ten)
     {
-        ManHinh manHinh = new ManHinh();
-        manHinh.setTen(ten);
-        manHinh.setTrangThai(1);
-        manHinhRepository.save(manHinh);
+        if (ten.trim().length() > 0 && manHinhRepository.findByTenIsLike(ten.trim()) == null) {
+            ManHinh manHinh = new ManHinh();
+            manHinh.setTen(ten.trim());
+            manHinh.setTrangThai(1);
+            manHinhRepository.save(manHinh);
+        }
+
 
         return "redirect:/manHinh/index";
     }
@@ -81,22 +81,23 @@ public class ManHinhController {
         return "ManHinh/index";
     }
 
-    @GetMapping("edit")
-    public String edit(Model model, @RequestParam("id") int id)
+    @GetMapping("edit/{id}")
+    public String edit(Model model, @PathVariable("id") int id)
     {
         Optional<ManHinh> manHinh = manHinhRepository.findById(id);
         model.addAttribute("manHinh", manHinh.get());
         return "ManHinh/update";
     }
 
-    @PostMapping("update")
-    public String update(@RequestParam("id") int id, @RequestParam("ten") String ten, @RequestParam("trangThai") int trangThai)
+    @PostMapping("update/{id}")
+    public String update(@PathVariable("id") int id, @RequestParam("ten") String ten)
     {
-        Optional<ManHinh> req = manHinhRepository.findById(id);
-        ManHinh manHinh = req.get();
-        manHinh.setTrangThai(trangThai);
-        manHinh.setTen(ten);
-        manHinhRepository.save(manHinh);
+        if (ten.trim().length() > 0) {
+            Optional<ManHinh> req = manHinhRepository.findById(id);
+            ManHinh manHinh = req.get();
+            manHinh.setTen(ten.trim());
+            manHinhRepository.save(manHinh);
+        }
         return "redirect:/manHinh/index";
     }
 }

@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -36,10 +33,12 @@ public class SimController {
     @PostMapping("/store")
     public String store(@RequestParam("ten") String ten)
     {
-        Sim sim = new Sim();
-        sim.setTen(ten);
-        sim.setTrangThai(1);
-        simRepository.save(sim);
+        if (ten.trim().length() > 0 && simRepository.findByTenIsLike(ten.trim()) == null) {
+            Sim sim = new Sim();
+            sim.setTen(ten.trim());
+            sim.setTrangThai(1);
+            simRepository.save(sim);
+        }
 
         return "redirect:/sim/index";
     }
@@ -81,22 +80,23 @@ public class SimController {
         return "Sim/index";
     }
 
-    @GetMapping("edit")
-    public String edit(Model model, @RequestParam("id") int id)
+    @GetMapping("edit/{id}")
+    public String edit(Model model, @PathVariable("id") int id)
     {
         Optional<Sim> sim = simRepository.findById(id);
         model.addAttribute("sim", sim.get());
         return "Sim/update";
     }
 
-    @PostMapping("update")
-    public String update(@RequestParam("id") int id, @RequestParam("ten") String ten, @RequestParam("trangThai") int trangThai)
+    @PostMapping("update/{id}")
+    public String update(@PathVariable("id") int id, @RequestParam("ten") String ten)
     {
-        Optional<Sim> req = simRepository.findById(id);
-        Sim sim = req.get();
-        sim.setTrangThai(trangThai);
-        sim.setTen(ten);
-        simRepository.save(sim);
+        if (ten.trim().length() > 0) {
+            Optional<Sim> req = simRepository.findById(id);
+            Sim sim = req.get();
+            sim.setTen(ten.trim());
+            simRepository.save(sim);
+        }
         return "redirect:/sim/index";
     }
 }
