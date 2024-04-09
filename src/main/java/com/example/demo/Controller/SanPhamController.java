@@ -101,11 +101,45 @@ public class SanPhamController {
     }
 
     @PostMapping("store")
-    public String store(@ModelAttribute("sanPham") SanPham sanPhamRq,
+    public String store(@RequestParam("tenSanPham") String tenSanPham,
+                        @RequestParam("idHeDieuHanh") int idHeDieuHanh,
+                        @RequestParam("idManHinh") int idManHinh,
+                        @RequestParam("idHang") int idHang,
+                        @RequestParam("idCameraTruoc") int idCameraTruoc,
+                        @RequestParam("idCameraSau") int idCameraSau,
+                        @RequestParam("idSim") int idSim,
+                        @RequestParam("idPin") int idPin,
+                        @RequestParam("idChip") int idChip,
                         @RequestParam("idRAM") List<Integer> lstIdRam,
                         @RequestParam("idROM") List<Integer> lstIdRom,
                         @RequestParam("idMauSac") List<Integer> lstIdMauSac) {
 
+        SanPham sanPhamRq = new SanPham();
+        sanPhamRq.setTenSanPham(tenSanPham);
+        HeDieuHanh hdh = new HeDieuHanh();
+        hdh.setId(idHeDieuHanh);
+        sanPhamRq.setIdHeDieuHanh(hdh);
+        ManHinh mh = new ManHinh();
+        mh.setId(idManHinh);
+        sanPhamRq.setIdManHinh(mh);
+        Hang hang = new Hang();
+        hang.setId(idHang);
+        sanPhamRq.setIdHang(hang);
+        CameraTruoc cameraTruoc = new CameraTruoc();
+        cameraTruoc.setId(idCameraTruoc);
+        sanPhamRq.setIdCameraTruoc(cameraTruoc);
+        CameraSau cameraSau = new CameraSau();
+        cameraSau.setId(idCameraSau);
+        sanPhamRq.setIdCameraSau(cameraSau);
+        Sim sim = new Sim();
+        sim.setId(idSim);
+        sanPhamRq.setIdSim(sim);
+        Pin pin = new Pin();
+        pin.setId(idPin);
+        sanPhamRq.setIdPin(pin);
+        Chip chip = new Chip();
+        chip.setId(idChip);
+        sanPhamRq.setIdChip(chip);
         for (Integer id : lstIdRam) {
             RAM ram = ramRepository.findById(id).get();
             dsRAM.add(ram);
@@ -163,7 +197,7 @@ public class SanPhamController {
         }
 
         if (check == 0) {
-            sanPhamRq.setMaSanPham(createMaCTSP(lstSPhams.size()));
+            sanPhamRq.setMaSanPham(generateMaSP());
             sanPhamRepository.save(sanPhamRq);
             sanPham = sanPhamRepository.findByTenSanPham(tenSpRq);
         }
@@ -206,6 +240,9 @@ public class SanPhamController {
             lstCTSP.get(i).setGiaBan(lstPrice.get(i));
             lstCTSP.get(i).setIdSanPham(sanPham);
         }
+        dsMauSac.clear();
+        dsRAM.clear();
+        dsROM.clear();
         ctspRepository.saveAll(lstCTSP);
 
         return "redirect:/sanPham/index";

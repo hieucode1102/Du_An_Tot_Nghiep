@@ -116,3 +116,76 @@ let menu, animate;
   // Auto update menu collapsed/expanded based on the themeConfig
   window.Helpers.setCollapsed(true, false);
 })();
+
+// RAM
+$(document).ready(function(){
+  $('.dropdown-menu #form-check-ram').click(function(event){
+    event.stopPropagation(); // Ngăn chặn sự kiện click truyền ra ngoài
+  });
+
+  $('.dropdown-menu #form-check-ram').change(function(){
+    var selectedItems = [];
+    $('.dropdown-menu #form-check-ram input[type="checkbox"]:checked').each(function(){
+      selectedItems.push($(this).siblings('label').text());
+    });
+
+    if(selectedItems.length > 0){
+      $('#ramDropdownMenuButton').text(selectedItems.join(', '));
+    } else {
+      $('#ramDropdownMenuButton').text('Chọn RAM');
+    }
+  });
+});
+
+// ROM
+$(document).ready(function(){
+  $('.dropdown-menu #form-check-rom').click(function(event){
+    event.stopPropagation(); // Ngăn chặn sự kiện click truyền ra ngoài
+  });
+
+  $('.dropdown-menu #form-check-rom').change(function(){
+    var selectedItems = [];
+    $('.dropdown-menu #form-check-rom input[type="checkbox"]:checked').each(function(){
+      selectedItems.push($(this).siblings('label').text());
+    });
+
+    if(selectedItems.length > 0){
+      $('#romDropdownMenuButton').text(selectedItems.join(', '));
+    } else {
+      $('#romDropdownMenuButton').text('Chọn ROM');
+    }
+  });
+});
+
+// Màu sắc
+function changeButtonBackground(checkbox) {
+  var button = checkbox.parentElement;
+  if (checkbox.checked) {
+    button.classList.add('btn-success');
+    addButtonToList(button.innerText.trim());
+  } else {
+    button.classList.remove('btn-success');
+    removeButtonFromList(button.innerText.trim());
+  }
+}
+
+function addButtonToList(buttonText) {
+  var selectedButtons = document.getElementById('selectedButtons');
+  var button = document.createElement('button');
+  button.setAttribute('type', 'button');
+  button.classList.add('btn', 'btn-success', 'me-2', 'mb-2');
+  button.style.backgroundColor = buttonText
+  button.innerText = buttonText;
+  selectedButtons.appendChild(button);
+}
+
+function removeButtonFromList(buttonText) {
+  var selectedButtons = document.getElementById('selectedButtons');
+  var buttons = selectedButtons.getElementsByTagName('button');
+  for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i].innerText.trim() === buttonText) {
+      selectedButtons.removeChild(buttons[i]);
+      break;
+    }
+  }
+}
